@@ -194,6 +194,8 @@ func (n *Nanobot) llmConfig() llm.Config {
 					"X-Title":      "nanobot",
 					// "<channel>/<client>" — how AI/ML API records traffic source.
 					"X-AIMLAPI-Source": "agent/nanobot",
+					// Static per-integration id AI/ML API attributes usage to.
+					"X-AIMLAPI-Partner-ID": "part_zr92DkjeE4RNVN7MmK1x1ijS",
 				},
 			},
 		},

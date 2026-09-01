@@ -73,4 +73,10 @@ func TestBuiltinAimlapiProvider(t *testing.T) {
 	if got := provider.Headers["X-AIMLAPI-Source"]; got != "agent/nanobot" {
 		t.Errorf("X-AIMLAPI-Source: got %q, want %q", got, "agent/nanobot")
 	}
+
+	// Without this header the traffic is recorded as untagged, which is a
+	// silent failure: requests still succeed, they just earn nothing.
+	if got := provider.Headers["X-AIMLAPI-Partner-ID"]; got != "part_zr92DkjeE4RNVN7MmK1x1ijS" {
+		t.Errorf("X-AIMLAPI-Partner-ID: got %q, want the nanobot partner id", got)
+	}
 }

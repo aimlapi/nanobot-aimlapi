@@ -57,6 +57,7 @@ Nanobot supports the following providers:
 
 - **OpenAI** (e.g. `gpt-4`)
 - **Anthropic** (e.g. `claude-3`)
+- **AI/ML API** (e.g. `aimlapi/openai/gpt-5-5`) — an aggregator serving many creators' models behind one key
 
 To use them, set the corresponding API key:
 
@@ -66,6 +67,9 @@ export OPENAI_API_KEY=sk-...
 
 # For Anthropic models
 export ANTHROPIC_API_KEY=sk-ant-...
+
+# For AI/ML API models
+export AIMLAPI_API_KEY=...
 ```
 
 Nanobot automatically selects the correct provider based on the model specified.
@@ -112,7 +116,9 @@ my-config/
 
 **LLM Providers**
 
-`openai` and `anthropic` are built-in providers — set `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` and they work with no additional config. Use the `{provider}/{model}` format in the `model` field to select a provider.
+`openai`, `anthropic` and `aimlapi` are built-in providers — set `OPENAI_API_KEY`, `ANTHROPIC_API_KEY` or `AIMLAPI_API_KEY` and they work with no additional config. Use the `{provider}/{model}` format in the `model` field to select a provider.
+
+Only the first `/` selects the provider, so an aggregator whose model names are themselves namespaced keeps them intact: `aimlapi/openai/gpt-5-5` reaches AI/ML API as `openai/gpt-5-5`.
 
 Additional providers (Azure, Bedrock, Ollama, etc.) can be configured in `nanobot.yaml` under `llmProviders`. 
 
@@ -140,6 +146,11 @@ llmProviders:
     dialect: AnthropicMessages
     apiKey: ${ANTHROPIC_API_KEY}
     baseURL: ${ANTHROPIC_BASE_URL}  # optional, default: https://api.anthropic.com/v1
+
+  aimlapi:
+    dialect: OpenAIChatCompletions
+    apiKey: ${AIMLAPI_API_KEY}
+    baseURL: https://api.aimlapi.com/v1
 
   # Custom providers pointing at any compatible endpoint
   azureOpenAI:

@@ -175,6 +175,27 @@ func (n *Nanobot) llmConfig() llm.Config {
 				APIKey:  "${ANTHROPIC_API_KEY}",
 				BaseURL: "${ANTHROPIC_BASE_URL}",
 			},
+			// AI/ML API is an aggregator, so its model names are themselves
+			// namespaced: the model field reads "aimlapi/openai/gpt-5-5". Only
+			// the first "/" selects the provider, so the rest reaches the API
+			// intact.
+			//
+			// The base URL is a literal rather than a ${VAR}: an unset variable
+			// resolves to the empty string, which the chat-completions client
+			// treats as "use api.openai.com" — an AI/ML API key would then be
+			// sent to OpenAI. Override it by declaring the provider in
+			// nanobot.yaml.
+			"aimlapi": {
+				Dialect: types.DialectOpenAIChatCompletions,
+				APIKey:  "${AIMLAPI_API_KEY}",
+				BaseURL: "https://api.aimlapi.com/v1",
+				Headers: map[string]string{
+					"HTTP-Referer": "https://github.com/obot-platform/nanobot",
+					"X-Title":      "nanobot",
+					// "<channel>/<client>" — how AI/ML API records traffic source.
+					"X-AIMLAPI-Source": "agent/nanobot",
+				},
+			},
 		},
 	}
 }

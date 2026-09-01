@@ -16,6 +16,7 @@ func TestResolveProvider(t *testing.T) {
 			"openai":    {Dialect: types.DialectOpenAIResponses},
 			"anthropic": {Dialect: types.DialectAnthropicMessages},
 			"azure":     {Dialect: types.DialectOpenAIResponses},
+			"aimlapi":   {Dialect: types.DialectOpenAIChatCompletions},
 		},
 	}
 
@@ -35,6 +36,11 @@ func TestResolveProvider(t *testing.T) {
 		{"anthropic prefix", "anthropic/claude-3-7-sonnet-latest", "claude-3-7-sonnet-latest", "anthropic"},
 		{"azure prefix", "azure/gpt-4o", "gpt-4o", "azure"},
 		{"unknown provider prefix", "vertex/gemini-pro", "gemini-pro", "vertex"},
+
+		// Aggregators namespace their own model names, so the model keeps
+		// every "/" after the first one that selects the provider.
+		{"aggregator nested model", "aimlapi/openai/gpt-5-5", "openai/gpt-5-5", "aimlapi"},
+		{"aggregator nested vendor", "aimlapi/anthropic/claude-sonnet-5", "anthropic/claude-sonnet-5", "aimlapi"},
 
 		// Default fallbacks (no prefix)
 		{"claude", "claude-haiku-4-5", "claude-haiku-4-5", "anthropic"},
